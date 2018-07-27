@@ -9,9 +9,9 @@
 # Example: pacsort: error while loading shared libraries
 
 pkgname=pacman
-pkgver=5.1.0
+pkgver=5.1.1
 _pkgver=1.0.0
-pkgrel=2
+pkgrel=1
 pkgdesc="A library-based package manager with dependency support"
 arch=('i686' 'x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -21,7 +21,8 @@ depends=('bash>=4.2.042-2' 'glibc>=2.17-2' 'libarchive>=3.1.2' 'curl>=7.39.0'
          'gpgme' 'archlinux-keyring' 'manjaro-keyring' 'pacman-mirrors>=4.1.0')
 checkdepends=('python2' 'fakechroot')
 makedepends=('asciidoc' 'pacman>=5.1')
-optdepends=('haveged: for pacman-init.service')
+optdepends=('haveged: for pacman-init.service'
+            'perl-locale-gettext: translation support in makepkg-template')
 provides=('pacman-contrib' 'pacman-init')
 conflicts=('pacman-contrib' 'pacman-init')
 replaces=('pacman-contrib' 'pacman-init')
@@ -36,18 +37,12 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig
         pacman.conf.i686
         pacman.conf.x86_64
         makepkg.conf
-        0001-makepkg-Clear-ERR-trap-before-trying-to-restore-it.patch
-        0002-makepkg-Don-t-use-parameterless-return.patch
         pacman-sync-first-option.patch
         etc-pacman.d-gnupg.mount
         pacman-init.service)
 
 prepare() {
   cd $srcdir/$pkgname-$pkgver
-
-  # Fix install_packages failure exit code, required by makechrootpkg
-  patch -Np1 -i $srcdir/0001-makepkg-Clear-ERR-trap-before-trying-to-restore-it.patch
-  patch -Np1 -i $srcdir/0002-makepkg-Don-t-use-parameterless-return.patch
 
   # Manjaro patches
   patch -p1 -i $srcdir/pacman-sync-first-option.patch
@@ -127,15 +122,13 @@ package() {
   ln -sfv "/usr/bin/pacman-mirrors" "$pkgdir/usr/bin/rankmirrors"
 }
 
-sha256sums=('9f5993fc8923530713742f15df284677f297b3eca15ed7a24758c98ac7399bd3'
+sha256sums=('be04b9162d62d2567e21402dcbabb5bedfdb03909fa5ec6e8568e02ab325bd8d'
             'SKIP'
             '0fb95514bd16a316d4cce920d34edc88b0d0618c484e2d7588746869d2339795'
             'SKIP'
-            'b2ebeb47dd78e9df277f5d363daa079c82850a0ee65d2017689497b340b92e80'
-            '01aa62ecd3e3d37bf800cd3ab0bf55121d3dd1d51a5070175c67216167a846de'
+            '4421dc5d63a24e926852c1ea83b575355772aaa2add71cc522cd04ca22b131d6'
+            'a9f21ebe59f1a2c8309145930ee96b8e3dc6e96e150fb77269d9958a80550950'
             'eec71e0b23f2ac1f06ad6ec5890d9de62effe0883ffd16573eed2153d0c87475'
-            '9b2304141582a421e812c76760a74f360a3cbd780472cbb60cf023a34d6fcb3d'
-            '2a31d4db5f6e19e0148d4892de14317514f2b2dfb5369c7972a641ca8be89e5a'
-            'd3a77bf8ea916c24a73b2a2dc4162d2b81f993394850e0f2c331a8f8893c1a0b'
+            'fe0901a02d34ccf288743397fa32526f6dd878db8337e666082bced10e24e754'
             'b6d14727ec465bb66d0a0358163b1bbfafcb4eaed55a0f57c30aabafae7eed68'
             '65d8bdccdcccb64ae05160b5d1e7f3e45e1887baf89dda36c1bd44c62442f91b')
