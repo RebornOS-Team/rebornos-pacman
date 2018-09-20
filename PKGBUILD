@@ -10,8 +10,9 @@
 
 pkgname=pacman
 pkgver=5.1.1
+_commit=7afe51171fe063bf3031cc68fc8c7ac914a01de2
 _pkgver=1.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="A library-based package manager with dependency support"
 arch=('i686' 'x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -28,11 +29,12 @@ conflicts=('pacman-contrib' 'pacman-init')
 replaces=('pacman-contrib' 'pacman-init')
 backup=(etc/pacman.conf etc/makepkg.conf)
 install=pacman.install
-options=('strip' 'debug')
+options=('emptydirs' 'strip' 'debug')
 validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@archlinux.org>
               'B8151B117037781095514CA7BBDFFC92306B1121'  # Andrew Gregory (pacman) <andrew@archlinux.org>
               '5134EF9EAF65F95B6BB1608E50FB9B273A9D0BB5') # Johannes Löthberg <johannes@kyriasis.com>
-source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig}
+source=(#https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig}
+        https://git.archlinux.org/pacman.git/snapshot/pacman-$_commit.tar.gz
         https://sources.archlinux.org/other/community/pacman-contrib/pacman-contrib-$_pkgver.tar.gz{,.asc}
         pacman.conf.i686
         pacman.conf.x86_64
@@ -42,10 +44,13 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig
         pacman-init.service)
 
 prepare() {
+  mv $srcdir/$pkgname-$_commit $srcdir/$pkgname-$pkgver
   cd $srcdir/$pkgname-$pkgver
 
   # Manjaro patches
   patch -p1 -i $srcdir/pacman-sync-first-option.patch
+
+  ./autogen.sh
 
   ./configure --prefix=/usr --sysconfdir=/etc \
     --localstatedir=/var --enable-doc \
@@ -98,16 +103,6 @@ package() {
     -e "s|@CHOST[@]|$mychost|g" \
     -e "s|@CARCHFLAGS[@]|$myflags|g"
     
-  # put bash_completion in the right location
-  install -dm755 ${pkgdir}/usr/share/bash-completion/completions
-  mv ${pkgdir}/etc/bash_completion.d/pacman \
-    ${pkgdir}/usr/share/bash-completion/completions
-  rmdir ${pkgdir}/etc/bash_completion.d
-
-  for f in makepkg pacman-key; do
-    ln -s pacman "$pkgdir/usr/share/bash-completion/completions/$f"
-  done
-
   # install pacman-init
   install -dm755 $pkgdir/usr/lib/systemd/system/
   install -m644 $srcdir/etc-pacman.d-gnupg.mount $pkgdir/usr/lib/systemd/system/etc-pacman.d-gnupg.mount
@@ -122,8 +117,7 @@ package() {
   ln -sfv "/usr/bin/pacman-mirrors" "$pkgdir/usr/bin/rankmirrors"
 }
 
-sha256sums=('be04b9162d62d2567e21402dcbabb5bedfdb03909fa5ec6e8568e02ab325bd8d'
-            'SKIP'
+sha256sums=('20ceed1216a4e69640f2f768ba004151f80a4eafef22b02863c27fd9263b8558'
             '308c3b8dc15ed8bd419cba1eb3103afe9250cf415626334a0c3a753b550549a6'
             'SKIP'
             '4421dc5d63a24e926852c1ea83b575355772aaa2add71cc522cd04ca22b131d6'
