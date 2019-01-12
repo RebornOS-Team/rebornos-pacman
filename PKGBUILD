@@ -11,7 +11,7 @@
 pkgname=pacman
 pkgver=5.1.2
 _pkgver=1.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A library-based package manager with dependency support"
 arch=('i686' 'x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -22,7 +22,8 @@ depends=('bash>=4.2.042-2' 'glibc>=2.17-2' 'libarchive>=3.1.2' 'curl>=7.39.0'
 checkdepends=('python2' 'fakechroot')
 makedepends=('asciidoc' 'pacman>=5.1')
 optdepends=('haveged: for pacman-init.service'
-            'perl-locale-gettext: translation support in makepkg-template')
+            'perl-locale-gettext: translation support in makepkg-template'
+            'xdelta3: delta support in repo-add')
 provides=('pacman-contrib' 'pacman-init')
 conflicts=('pacman-contrib' 'pacman-init')
 replaces=('pacman-contrib' 'pacman-init')
@@ -101,6 +102,15 @@ package() {
     -e "s|@CARCH[@]|$mycarch|g" \
     -e "s|@CHOST[@]|$mychost|g" \
     -e "s|@CARCHFLAGS[@]|$myflags|g"
+
+  # put bash_completion in the right location
+  install -dm755 "$pkgdir/usr/share/bash-completion/completions"
+  mv "$pkgdir/etc/bash_completion.d/pacman" "$pkgdir/usr/share/bash-completion/completions"
+  rmdir "$pkgdir/etc/bash_completion.d"
+
+  for f in makepkg pacman-key; do
+    ln -s pacman "$pkgdir/usr/share/bash-completion/completions/$f"
+  done
     
   # install pacman-init
   install -dm755 $pkgdir/usr/lib/systemd/system/
