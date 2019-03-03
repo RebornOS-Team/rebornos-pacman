@@ -9,9 +9,9 @@
 # Example: pacsort: error while loading shared libraries
 
 pkgname=pacman
-pkgver=5.1.2
+pkgver=5.1.3
 _pkgver=1.1.0
-pkgrel=2
+pkgrel=1
 pkgdesc="A library-based package manager with dependency support"
 arch=('i686' 'x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -126,7 +126,7 @@ package() {
   ln -sfv "/usr/bin/pacman-mirrors" "$pkgdir/usr/bin/rankmirrors"
 }
 
-sha256sums=('ce4eef1585fe64fd1c65c269e263577261edd7535fe2278240103012d74b6ef6'
+sha256sums=('10db61a0928d619871340c3f93a677d1541d6c52353c516aec4f8d96e830d4eb'
             'SKIP'
             '308c3b8dc15ed8bd419cba1eb3103afe9250cf415626334a0c3a753b550549a6'
             'SKIP'
