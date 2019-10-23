@@ -60,7 +60,7 @@ diff -Nur a/src/pacman/sync.c b/src/pacman/sync.c
 +			continue;
 +		}
 +
-+		if(alpm_sync_newversion(pkg, syncdbs)) {
++		if(alpm_sync_get_new_version(pkg, syncdbs)) {
 +			res = alpm_list_add(res, strdup(pkgname));
 +		}
 +	}

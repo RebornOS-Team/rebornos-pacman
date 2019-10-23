@@ -9,22 +9,21 @@
 # Example: pacsort: error while loading shared libraries
 
 pkgname=pacman
-pkgver=5.1.3
-_pkgver=1.1.0
+pkgver=5.2.0
+_pkgver=1.2.0
 pkgrel=1
 pkgdesc="A library-based package manager with dependency support"
 arch=('i686' 'x86_64')
 url="http://www.archlinux.org/pacman/"
 license=('GPL')
 groups=('base' 'base-devel')
-depends=('bash>=4.2.042-2' 'glibc>=2.17-2' 'libarchive>=3.1.2' 'curl>=7.39.0'
-         'gpgme' 'archlinux-keyring' 'manjaro-keyring' 'pacman-mirrors>=4.1.0')
-checkdepends=('python2' 'fakechroot')
-makedepends=('asciidoc' 'pacman>=5.1')
+depends=('bash' 'glibc' 'libarchive' 'curl' 'perl' 'gpgme' 'archlinux-keyring'
+         'manjaro-keyring' 'pacman-mirrors>=4.1.0')
+checkdepends=('python' 'fakechroot')
+makedepends=('asciidoc' 'pacman>=5.2')
 optdepends=('haveged: for pacman-init.service'
-            'perl-locale-gettext: translation support in makepkg-template'
-            'xdelta3: delta support in repo-add')
-provides=('pacman-contrib' 'pacman-init')
+            'perl-locale-gettext: translation support in makepkg-template')
+provides=('pacman-contrib' 'pacman-init' 'libalpm.so')
 conflicts=('pacman-contrib' 'pacman-init')
 replaces=('pacman-contrib' 'pacman-init')
 backup=(etc/pacman.conf etc/makepkg.conf)
@@ -35,7 +34,7 @@ validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@a
               '5134EF9EAF65F95B6BB1608E50FB9B273A9D0BB5') # Johannes Löthberg <johannes@kyriasis.com>
 source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig}
         #https://git.archlinux.org/pacman.git/snapshot/pacman-$_commit.tar.gz
-        https://sources.archlinux.org/other/community/pacman-contrib/pacman-contrib-$_pkgver.tar.gz{,.asc}
+        https://git.archlinux.org/pacman-contrib.git/snapshot/pacman-contrib-$_pkgver.tar.{gz,asc}
         pacman.conf.i686
         pacman.conf.x86_64
         makepkg.conf
@@ -56,6 +55,14 @@ prepare() {
     --localstatedir=/var --enable-doc \
     --with-scriptlet-shell=/usr/bin/bash \
     --with-ldconfig=/usr/bin/ldconfig
+
+  cd $srcdir/pacman-contrib-$_pkgver
+
+  ./autogen.sh
+  ./configure \
+      --prefix=/usr \
+      --sysconfdir=/etc \
+      --localstatedir=/var
 }
 
 build() {
@@ -63,11 +70,6 @@ build() {
   make V=1
 
   cd $srcdir/pacman-contrib-$_pkgver
-
-  ./configure \
-      --prefix=/usr \
-      --sysconfdir=/etc \
-      --localstatedir=/var
   make
 }
 
@@ -103,15 +105,6 @@ package() {
     -e "s|@CHOST[@]|$mychost|g" \
     -e "s|@CARCHFLAGS[@]|$myflags|g"
 
-  # put bash_completion in the right location
-  install -dm755 "$pkgdir/usr/share/bash-completion/completions"
-  mv "$pkgdir/etc/bash_completion.d/pacman" "$pkgdir/usr/share/bash-completion/completions"
-  rmdir "$pkgdir/etc/bash_completion.d"
-
-  for f in makepkg pacman-key; do
-    ln -s pacman "$pkgdir/usr/share/bash-completion/completions/$f"
-  done
-    
   # install pacman-init
   install -dm755 $pkgdir/usr/lib/systemd/system/
   install -m644 $srcdir/etc-pacman.d-gnupg.mount $pkgdir/usr/lib/systemd/system/etc-pacman.d-gnupg.mount
@@ -126,13 +119,13 @@ package() {
   ln -sfv "/usr/bin/pacman-mirrors" "$pkgdir/usr/bin/rankmirrors"
 }
 
-sha256sums=('10db61a0928d619871340c3f93a677d1541d6c52353c516aec4f8d96e830d4eb'
+sha256sums=('4df564447abba9236e0ad3228b781a95f6375a96693b9ae6558dc144b6ecb440'
             'SKIP'
-            '308c3b8dc15ed8bd419cba1eb3103afe9250cf415626334a0c3a753b550549a6'
+            '317f53819e35647a19138cb0d68e16206af4a80f52115a7cd622c4a367f914b7'
             'SKIP'
-            '4421dc5d63a24e926852c1ea83b575355772aaa2add71cc522cd04ca22b131d6'
-            'a9f21ebe59f1a2c8309145930ee96b8e3dc6e96e150fb77269d9958a80550950'
-            'eec71e0b23f2ac1f06ad6ec5890d9de62effe0883ffd16573eed2153d0c87475'
-            'fe0901a02d34ccf288743397fa32526f6dd878db8337e666082bced10e24e754'
+            '7e0aa0144d9677ce4fa9e4a53d3007e8e6d3b96ce61639e65a2cd91e37f1664b'
+            'b6eb7e06c60f599dc3a1474828a4e8ee79f7c08dfe51cdbd8835b005e6079fa9'
+            'a50cd13ca5774f2bcfffd416abf0bca35fa525aba0626d7054863e6b7f1cdf93'
+            '8167155d3a3e15fc4a1b1e989fdb826779e7b3690a52e2ca9d307ae0b1550e1d'
             'b6d14727ec465bb66d0a0358163b1bbfafcb4eaed55a0f57c30aabafae7eed68'
             '65d8bdccdcccb64ae05160b5d1e7f3e45e1887baf89dda36c1bd44c62442f91b')
