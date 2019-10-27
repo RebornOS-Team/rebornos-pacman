@@ -11,7 +11,8 @@
 pkgname=pacman
 pkgver=5.2.0
 _pkgver=1.2.0
-pkgrel=1
+_commit=f37a3752b38473236720e01230392377a42249e6
+pkgrel=2
 pkgdesc="A library-based package manager with dependency support"
 arch=('i686' 'x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -20,7 +21,7 @@ groups=('base' 'base-devel')
 depends=('bash' 'glibc' 'libarchive' 'curl' 'perl' 'gpgme' 'archlinux-keyring'
          'manjaro-keyring' 'pacman-mirrors>=4.1.0')
 checkdepends=('python' 'fakechroot')
-makedepends=('asciidoc' 'pacman>=5.2')
+makedepends=('asciidoc' 'pacman>=5.2' 'meson')
 optdepends=('haveged: for pacman-init.service'
             'perl-locale-gettext: translation support in makepkg-template')
 provides=('pacman-contrib' 'pacman-init' 'libalpm.so')
@@ -32,8 +33,8 @@ options=('emptydirs' 'strip' 'debug')
 validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@archlinux.org>
               'B8151B117037781095514CA7BBDFFC92306B1121'  # Andrew Gregory (pacman) <andrew@archlinux.org>
               '5134EF9EAF65F95B6BB1608E50FB9B273A9D0BB5') # Johannes Löthberg <johannes@kyriasis.com>
-source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig}
-        #https://git.archlinux.org/pacman.git/snapshot/pacman-$_commit.tar.gz
+source=(#https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig}
+        https://git.archlinux.org/pacman.git/snapshot/pacman-$_commit.tar.gz
         https://git.archlinux.org/pacman-contrib.git/snapshot/pacman-contrib-$_pkgver.tar.{gz,asc}
         pacman.conf.i686
         pacman.conf.x86_64
@@ -43,18 +44,28 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig
         pacman-init.service)
 
 prepare() {
-  #mv $srcdir/$pkgname-$_commit $srcdir/$pkgname-$pkgver
+  mv $srcdir/$pkgname-$_commit $srcdir/$pkgname-$pkgver
+  mkdir -p $pkgname-$pkgver/build
+
   cd $srcdir/$pkgname-$pkgver
 
   # Manjaro patches
   patch -p1 -i $srcdir/pacman-sync-first-option.patch
 
-  #./autogen.sh
+  cd build
 
-  ./configure --prefix=/usr --sysconfdir=/etc \
-    --localstatedir=/var --enable-doc \
-    --with-scriptlet-shell=/usr/bin/bash \
-    --with-ldconfig=/usr/bin/ldconfig
+  meson --prefix=/usr \
+        --buildtype=plain \
+        -Ddoc=enabled \
+        -Duse-git-version=false \
+        -Dscriptlet-shell=/usr/bin/bash \
+        -Dldconfig=/usr/bin/ldconfig \
+        ..
+
+#  ./configure --prefix=/usr --sysconfdir=/etc \
+#    --localstatedir=/var --enable-doc \
+#    --with-scriptlet-shell=/usr/bin/bash \
+#    --with-ldconfig=/usr/bin/ldconfig
 
   cd $srcdir/pacman-contrib-$_pkgver
 
@@ -66,21 +77,30 @@ prepare() {
 }
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
-  make V=1
+#  cd $srcdir/$pkgname-$pkgver
+#  make V=1
+
+  cd $srcdir/$pkgname-$pkgver/build
+  ninja
 
   cd $srcdir/pacman-contrib-$_pkgver
   make
 }
 
 check() {
-  make -C "$pkgname-$pkgver" check
-  make -C pacman-contrib-$_pkgver check
+#  make -C "$srcdir/$pkgname-$pkgver" check
+  cd $pkgname-$pkgver/build
+  ninja test
+
+  make -C "$srcdir/pacman-contrib-$_pkgver" check
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
-  make DESTDIR=$pkgdir install
+#  cd $srcdir/$pkgname-$pkgver
+#  make DESTDIR=$pkgdir install
+
+  cd $srcdir/$pkgname-$pkgver/build
+  DESTDIR="$pkgdir" ninja install
 
   # install Arch specific stuff
   install -dm755 $pkgdir/etc
@@ -119,8 +139,7 @@ package() {
   ln -sfv "/usr/bin/pacman-mirrors" "$pkgdir/usr/bin/rankmirrors"
 }
 
-sha256sums=('4df564447abba9236e0ad3228b781a95f6375a96693b9ae6558dc144b6ecb440'
-            'SKIP'
+sha256sums=('ff344040f2beedf38a90e1c4f29822c82429d97c43b58e5648ac9c70feab0a7f'
             '317f53819e35647a19138cb0d68e16206af4a80f52115a7cd622c4a367f914b7'
             'SKIP'
             '7e0aa0144d9677ce4fa9e4a53d3007e8e6d3b96ce61639e65a2cd91e37f1664b'
