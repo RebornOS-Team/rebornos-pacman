@@ -9,10 +9,10 @@
 # Example: pacsort: error while loading shared libraries
 
 pkgname=pacman
-pkgver=5.2.0
+pkgver=5.2.1
 _pkgver=1.2.0
-_commit=f37a3752b38473236720e01230392377a42249e6
-pkgrel=2
+_commit=
+pkgrel=1
 pkgdesc="A library-based package manager with dependency support"
 arch=('i686' 'x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -33,8 +33,8 @@ options=('emptydirs' 'strip' 'debug')
 validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@archlinux.org>
               'B8151B117037781095514CA7BBDFFC92306B1121'  # Andrew Gregory (pacman) <andrew@archlinux.org>
               '5134EF9EAF65F95B6BB1608E50FB9B273A9D0BB5') # Johannes Löthberg <johannes@kyriasis.com>
-source=(#https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig}
-        https://git.archlinux.org/pacman.git/snapshot/pacman-$_commit.tar.gz
+source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig}
+        #https://git.archlinux.org/pacman.git/snapshot/pacman-$_commit.tar.gz
         https://git.archlinux.org/pacman-contrib.git/snapshot/pacman-contrib-$_pkgver.tar.{gz,asc}
         pacman.conf.i686
         pacman.conf.x86_64
@@ -44,7 +44,7 @@ source=(#https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.si
         pacman-init.service)
 
 prepare() {
-  mv $srcdir/$pkgname-$_commit $srcdir/$pkgname-$pkgver
+  #mv $srcdir/$pkgname-$_commit $srcdir/$pkgname-$pkgver
   mkdir -p $pkgname-$pkgver/build
 
   cd $srcdir/$pkgname-$pkgver
@@ -139,7 +139,8 @@ package() {
   ln -sfv "/usr/bin/pacman-mirrors" "$pkgdir/usr/bin/rankmirrors"
 }
 
-sha256sums=('ff344040f2beedf38a90e1c4f29822c82429d97c43b58e5648ac9c70feab0a7f'
+sha256sums=('1930c407265fd039cb3a8e6edc82f69e122aa9239d216d9d57b9d1b9315af312'
+            'SKIP'
             '317f53819e35647a19138cb0d68e16206af4a80f52115a7cd622c4a367f914b7'
             'SKIP'
             '7e0aa0144d9677ce4fa9e4a53d3007e8e6d3b96ce61639e65a2cd91e37f1664b'
