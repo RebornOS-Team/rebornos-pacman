@@ -12,7 +12,7 @@ pkgname=pacman
 pkgver=5.2.1
 _pkgver=1.2.0
 _commit=
-pkgrel=2
+pkgrel=3
 pkgdesc="A library-based package manager with dependency support"
 arch=('i686' 'x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -41,6 +41,7 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig
         pacman.conf.x86_64
         makepkg.conf
         pacman-sync-first-option.patch
+        pacman-max-size-32MB.patch
         etc-pacman.d-gnupg.mount
         pacman-init.service)
 
@@ -50,6 +51,9 @@ prepare() {
 
   # Manjaro patches
   patch -p1 -i $srcdir/pacman-sync-first-option.patch
+
+  # Manjaro Community Repo excels 25 MB of db.files
+  patch -p1 -i $srcdir/pacman-max-size-32MB.patch
 
   cd $srcdir/pacman-contrib-$_pkgver
   ./autogen.sh
@@ -128,5 +132,6 @@ sha256sums=('1930c407265fd039cb3a8e6edc82f69e122aa9239d216d9d57b9d1b9315af312'
             'b6eb7e06c60f599dc3a1474828a4e8ee79f7c08dfe51cdbd8835b005e6079fa9'
             '0aee6e468944bfd2b1a2f23423b923a92bdf6bf11bb02321a2dbda8090cb7999'
             '8167155d3a3e15fc4a1b1e989fdb826779e7b3690a52e2ca9d307ae0b1550e1d'
+            'd36d49f7579202b55e6003fa2ab141b58bd26fa685479424621f42425a994e86'
             'b6d14727ec465bb66d0a0358163b1bbfafcb4eaed55a0f57c30aabafae7eed68'
             '65d8bdccdcccb64ae05160b5d1e7f3e45e1887baf89dda36c1bd44c62442f91b')
