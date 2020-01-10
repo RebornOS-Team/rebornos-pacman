@@ -12,7 +12,7 @@ pkgname=pacman
 pkgver=5.2.1
 _pkgver=1.2.0
 _commit=
-pkgrel=3
+pkgrel=4
 pkgdesc="A library-based package manager with dependency support"
 arch=('i686' 'x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -42,9 +42,23 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig
         makepkg.conf
         pacman-sync-first-option.patch
         pacman-max-size-32MB.patch
+        pacman-5.2.1-fix-pactest-package-tar-format.patch::https://git.archlinux.org/pacman.git/patch/?id=b9faf652735c603d1bdf849a570185eb721f11c1
+        makepkg-fix-one-more-file-seccomp-issue.patch
         etc-pacman.d-gnupg.mount
         pacman-init.service)
-
+sha256sums=('1930c407265fd039cb3a8e6edc82f69e122aa9239d216d9d57b9d1b9315af312'
+            'SKIP'
+            '317f53819e35647a19138cb0d68e16206af4a80f52115a7cd622c4a367f914b7'
+            'SKIP'
+            '7e0aa0144d9677ce4fa9e4a53d3007e8e6d3b96ce61639e65a2cd91e37f1664b'
+            'b6eb7e06c60f599dc3a1474828a4e8ee79f7c08dfe51cdbd8835b005e6079fa9'
+            '0aee6e468944bfd2b1a2f23423b923a92bdf6bf11bb02321a2dbda8090cb7999'
+            '8167155d3a3e15fc4a1b1e989fdb826779e7b3690a52e2ca9d307ae0b1550e1d'
+            'd36d49f7579202b55e6003fa2ab141b58bd26fa685479424621f42425a994e86'
+            'd268379269c9dfa6eb3358f8931d3c84ef5fa4d47fe22567022fcbac8e4638c1'
+            '83a4dd9ddff7611f2336636b4196a5ad7229f7e2866140160f19204d8350a2ee'
+            'b6d14727ec465bb66d0a0358163b1bbfafcb4eaed55a0f57c30aabafae7eed68'
+            '65d8bdccdcccb64ae05160b5d1e7f3e45e1887baf89dda36c1bd44c62442f91b')
 prepare() {
   #mv $srcdir/$pkgname-$_commit $srcdir/$pkgname-$pkgver
   cd $pkgname-$pkgver
@@ -52,8 +66,12 @@ prepare() {
   # Manjaro patches
   patch -p1 -i $srcdir/pacman-sync-first-option.patch
 
-  # Manjaro Community Repo excels 25 MB of db.files
+  # Manjaro Community Repo exceeds 25 MB of db.files
   patch -p1 -i $srcdir/pacman-max-size-32MB.patch
+
+  # Archlinux patches
+  patch -Np1 < ../pacman-5.2.1-fix-pactest-package-tar-format.patch
+  patch -Np1 < ../makepkg-fix-one-more-file-seccomp-issue.patch
 
   cd $srcdir/pacman-contrib-$_pkgver
   ./autogen.sh
@@ -123,15 +141,3 @@ package() {
   rm "$pkgdir/usr/bin/rankmirrors"
   ln -sfv "/usr/bin/pacman-mirrors" "$pkgdir/usr/bin/rankmirrors"
 }
-
-sha256sums=('1930c407265fd039cb3a8e6edc82f69e122aa9239d216d9d57b9d1b9315af312'
-            'SKIP'
-            '317f53819e35647a19138cb0d68e16206af4a80f52115a7cd622c4a367f914b7'
-            'SKIP'
-            '7e0aa0144d9677ce4fa9e4a53d3007e8e6d3b96ce61639e65a2cd91e37f1664b'
-            'b6eb7e06c60f599dc3a1474828a4e8ee79f7c08dfe51cdbd8835b005e6079fa9'
-            '0aee6e468944bfd2b1a2f23423b923a92bdf6bf11bb02321a2dbda8090cb7999'
-            '8167155d3a3e15fc4a1b1e989fdb826779e7b3690a52e2ca9d307ae0b1550e1d'
-            'd36d49f7579202b55e6003fa2ab141b58bd26fa685479424621f42425a994e86'
-            'b6d14727ec465bb66d0a0358163b1bbfafcb4eaed55a0f57c30aabafae7eed68'
-            '65d8bdccdcccb64ae05160b5d1e7f3e45e1887baf89dda36c1bd44c62442f91b')
