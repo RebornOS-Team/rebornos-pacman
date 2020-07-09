@@ -9,10 +9,10 @@
 # Example: pacsort: error while loading shared libraries
 
 pkgname=pacman
-pkgver=5.2.1
+pkgver=5.2.2
 _pkgver=1.3.0
 _commit=
-pkgrel=7
+pkgrel=1
 pkgdesc="A library-based package manager with dependency support"
 arch=('i686' 'x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -23,7 +23,11 @@ depends=('bash' 'glibc' 'libarchive' 'curl' 'perl' 'gpgme' 'archlinux-keyring'
 checkdepends=('python' 'fakechroot')
 makedepends=('asciidoc' 'pacman>=5.2')
 optdepends=('haveged: for pacman-init.service'
-            'perl-locale-gettext: translation support in makepkg-template')
+            'perl-locale-gettext: translation support in makepkg-template'
+            'findutils: for pacdiff --find'
+            'mlocate: for pacdiff --locate'
+            'sudo: privilege elevation for several scripts'
+            'vim: default merge program for pacdiff')
 provides=('pacman-contrib' 'pacman-init' 'libalpm.so')
 conflicts=('pacman-contrib' 'pacman-init')
 replaces=('pacman-contrib' 'pacman-init')
@@ -41,13 +45,9 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig
         pacman.conf.x86_64
         makepkg.conf
         pacman-sync-first-option.patch
-        pacman-max-size-32MB.patch
-        pacman-5.2.1-fix-pactest-package-tar-format.patch::https://git.archlinux.org/pacman.git/patch/?id=b9faf652735c603d1bdf849a570185eb721f11c1
-        pacman-5.2.1-reproducible-libprovides.patch::https://git.archlinux.org/pacman.git/patch/?id=8ce142a2552418f64a74e773f659d92b065d6209
-        makepkg-fix-one-more-file-seccomp-issue.patch
         etc-pacman.d-gnupg.mount
         pacman-init.service)
-sha256sums=('1930c407265fd039cb3a8e6edc82f69e122aa9239d216d9d57b9d1b9315af312'
+sha256sums=('bb201a9f2fb53c28d011f661d50028efce6eef2c1d2a36728bdd0130189349a0'
             'SKIP'
             '2b8f614651dbe272c9b518c73e53fc194405c06fd8637159a8ac9012c84e9452'
             'SKIP'
@@ -55,10 +55,6 @@ sha256sums=('1930c407265fd039cb3a8e6edc82f69e122aa9239d216d9d57b9d1b9315af312'
             'b6eb7e06c60f599dc3a1474828a4e8ee79f7c08dfe51cdbd8835b005e6079fa9'
             '0aee6e468944bfd2b1a2f23423b923a92bdf6bf11bb02321a2dbda8090cb7999'
             '8167155d3a3e15fc4a1b1e989fdb826779e7b3690a52e2ca9d307ae0b1550e1d'
-            'd36d49f7579202b55e6003fa2ab141b58bd26fa685479424621f42425a994e86'
-            '41c582be4400f7de27530ff164cef7ea09996e4c63a59ea72d3d522104be8e9c'
-            'de4a35cd0b9c6dd85a318f6bd9c3e3a8155fca4e92c1035f3f2f6c2e8df2d1aa'
-            '83a4dd9ddff7611f2336636b4196a5ad7229f7e2866140160f19204d8350a2ee'
             'b6d14727ec465bb66d0a0358163b1bbfafcb4eaed55a0f57c30aabafae7eed68'
             '65d8bdccdcccb64ae05160b5d1e7f3e45e1887baf89dda36c1bd44c62442f91b')
 prepare() {
@@ -67,14 +63,6 @@ prepare() {
 
   # Manjaro patches
   patch -p1 -i $srcdir/pacman-sync-first-option.patch
-
-  # Manjaro Community Repo exceeds 25 MB of db.files
-  patch -p1 -i $srcdir/pacman-max-size-32MB.patch
-
-  # Archlinux patches
-  patch -Np1 < ../pacman-5.2.1-fix-pactest-package-tar-format.patch
-  patch -Np1 < ../makepkg-fix-one-more-file-seccomp-issue.patch
-  patch -Np1 < ../pacman-5.2.1-reproducible-libprovides.patch
 
   cd $srcdir/pacman-contrib-$_pkgver
   ./autogen.sh
