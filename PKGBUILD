@@ -12,7 +12,7 @@ pkgname=pacman
 pkgver=5.2.2
 _pkgver=1.4.0
 _commit=
-pkgrel=2
+pkgrel=3
 pkgdesc="A library-based package manager with dependency support"
 arch=('i686' 'x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -50,10 +50,9 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig
 sha256sums=('bb201a9f2fb53c28d011f661d50028efce6eef2c1d2a36728bdd0130189349a0'
             'SKIP'
             '8746f1352aaad990fe633be34f925d5ab8bd8a19a5f1274e72dbde426deb86bd'
-            #'SKIP'
             '7e0aa0144d9677ce4fa9e4a53d3007e8e6d3b96ce61639e65a2cd91e37f1664b'
             'b6eb7e06c60f599dc3a1474828a4e8ee79f7c08dfe51cdbd8835b005e6079fa9'
-            '0aee6e468944bfd2b1a2f23423b923a92bdf6bf11bb02321a2dbda8090cb7999'
+            'd72897c7f7548f88ee324ba98ca98fdebd69d046fa1b0edcd6199e7b72c16ccf'
             '8167155d3a3e15fc4a1b1e989fdb826779e7b3690a52e2ca9d307ae0b1550e1d'
             'b6d14727ec465bb66d0a0358163b1bbfafcb4eaed55a0f57c30aabafae7eed68'
             '65d8bdccdcccb64ae05160b5d1e7f3e45e1887baf89dda36c1bd44c62442f91b')
