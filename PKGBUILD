@@ -12,7 +12,7 @@ pkgname=pacman
 pkgver=5.2.2
 _pkgver=1.4.0
 _commit=
-pkgrel=3
+pkgrel=4
 pkgdesc="A library-based package manager with dependency support"
 arch=('i686' 'x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -40,6 +40,7 @@ validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@a
 
 source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig}
         #https://git.archlinux.org/pacman.git/snapshot/pacman-$_commit.tar.gz
+        pacman-5.2.2-fix-strip-messing-up-file-attributes.patch::'https://git.archlinux.org/pacman.git/patch/?id=88d054093c1c99a697d95b26bd9aad5bc4d8e170'
         https://git.archlinux.org/pacman-contrib.git/snapshot/pacman-contrib-$_pkgver.tar.gz #{gz,asc}
         pacman.conf.i686
         pacman.conf.x86_64
@@ -49,6 +50,7 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz{,.sig
         pacman-init.service)
 sha256sums=('bb201a9f2fb53c28d011f661d50028efce6eef2c1d2a36728bdd0130189349a0'
             'SKIP'
+            '871fd97b3f13f1718358e4b8e046a56c0262c9042b5e3b5d60835606735798bd'
             '8746f1352aaad990fe633be34f925d5ab8bd8a19a5f1274e72dbde426deb86bd'
             '7e0aa0144d9677ce4fa9e4a53d3007e8e6d3b96ce61639e65a2cd91e37f1664b'
             'b6eb7e06c60f599dc3a1474828a4e8ee79f7c08dfe51cdbd8835b005e6079fa9'
@@ -59,6 +61,9 @@ sha256sums=('bb201a9f2fb53c28d011f661d50028efce6eef2c1d2a36728bdd0130189349a0'
 prepare() {
   #mv $srcdir/$pkgname-$_commit $srcdir/$pkgname-$pkgver
   cd $pkgname-$pkgver
+  
+  # Arch patches
+  patch -p1 -i $srcdir/pacman-5.2.2-fix-strip-messing-up-file-attributes.patch
 
   # Manjaro patches
   patch -p1 -i $srcdir/pacman-sync-first-option.patch
