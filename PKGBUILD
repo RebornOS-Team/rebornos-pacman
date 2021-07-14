@@ -1,17 +1,15 @@
-# Based on the file created for Arch Linux by:
+# Maintainer: Philip Müller <philm[at]manjaro[dot]org>
+# Maintainer: Bernhard Landauer <bernhard[at]manjaro[dot]org>
+# Maintainer: Helmut Stult <helmut[at]manjaro[dot]org>
+
+# Arch credits:
 # Dan McGee <dan@archlinux.org>
 # Dave Reisner <dreisner@archlinux.org>
-
-# Maintainer: Philip Müller <philm@manjaro.org>
-# Maintainer: Guinux <guillaume@manjaro.org>
-
-# Note: since we include pacman-contrib with this package we have to build pacman twice
-# Example: pacsort: error while loading shared libraries
 
 pkgname=pacman
 pkgver=6.0.0
 _pkgver=1.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -39,9 +37,9 @@ validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@a
               '5134EF9EAF65F95B6BB1608E50FB9B273A9D0BB5') # Johannes Löthberg <johannes@kyriasis.com>
 
 source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig}
-        pacman-6.0.0-fix-404-download.patch::https://git.archlinux.org/pacman.git/patch/?id=3401f9e142ac4c701cd98c52618cb13164f2146b
-        pacman-6.0.0-fix-key-import-double-free.patch::https://git.archlinux.org/pacman.git/patch/?id=542910d684191eb7f25ddc5d3d8fe3060028a267
-        https://git.archlinux.org/pacman-contrib.git/snapshot/pacman-contrib-$_pkgver.tar.gz
+        pacman-6.0.0-fix-404-download.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/3401f9e142ac4c701cd98c52618cb13164f2146b.patch
+        pacman-6.0.0-fix-key-import-double-free.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/542910d684191eb7f25ddc5d3d8fe3060028a267.patch
+        https://gitlab.archlinux.org/pacman/pacman-contrib/-/archive/v$_pkgver/pacman-contrib-v$_pkgver.tar.gz
         0001-pactree-fix-compilation-with-pacman-6.patch
         pacman.conf
         makepkg.conf
@@ -50,15 +48,16 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig
         pacman-init.service)
 sha256sums=('004448085a7747bdc7a0a4dd5d1fb7556c6b890111a06e029ab088f9905d4808'
             'SKIP'
-            'fe7e037e1b84bfa5bc401650d148c2a2e87d827705a6ec18a596ff5eea3cc0fd'
-            'a51b57dd47818d97e29ac0b8604b4b409916bbe6029adfbb03ac7e7c2b2a0819'
-            '8746f1352aaad990fe633be34f925d5ab8bd8a19a5f1274e72dbde426deb86bd'
+            'f4c1c39b43b52ba19b656b32913688b81085c73685afe32d2018dbb695d5a1e6'
+            'defdf1686d65fc896c19f41d1bc166912fccf9134b72e50da3b24538366cecdf'
+            'c97b2889ab012feaa1882865af9cfeb2406c9045757d2e73b5903277472ce6a2'
             '774d27532a91e2fe490ccc8d21c2d1d4d2a2dbfc8678a8406abb8bb8f9e6626c'
             'a71fabbf3cce40c8df7b2d9897d01c77bcc51c692258224acf492a4440f0feb7'
             '9a1e997163e43f0ed178973317ef0110d2faa5bfcb1e64546072d64a14889a59'
             '8167155d3a3e15fc4a1b1e989fdb826779e7b3690a52e2ca9d307ae0b1550e1d'
             'b6d14727ec465bb66d0a0358163b1bbfafcb4eaed55a0f57c30aabafae7eed68'
             '65d8bdccdcccb64ae05160b5d1e7f3e45e1887baf89dda36c1bd44c62442f91b')
+
 prepare() {
   cd $pkgname-$pkgver
   
@@ -69,8 +68,9 @@ prepare() {
   # Manjaro patches
   patch -Np1 < "$srcdir"/pacman-sync-first-option.patch
 
-  cd $srcdir/pacman-contrib-$_pkgver
+  cd $srcdir/pacman-contrib-v$_pkgver
   patch --forward --strip=1 --input=../0001-pactree-fix-compilation-with-pacman-6.patch
+
   ./autogen.sh
 }
 
@@ -87,7 +87,7 @@ build() {
 
   meson compile -C build
 
-  cd $srcdir/pacman-contrib-$_pkgver
+  cd $srcdir/pacman-contrib-v$_pkgver
 
   ./configure \
     --prefix=/usr \
@@ -101,7 +101,7 @@ check() {
   meson test -C build
   cd ..
   
-  make -C pacman-contrib-$_pkgver check
+  make -C pacman-contrib-v$_pkgver check
 }
 
 package() {
@@ -119,7 +119,7 @@ package() {
   install -m644 $srcdir/etc-pacman.d-gnupg.mount $pkgdir/usr/lib/systemd/system/etc-pacman.d-gnupg.mount
   install -m644 $srcdir/pacman-init.service $pkgdir/usr/lib/systemd/system/pacman-init.service
 
-  cd $srcdir/pacman-contrib-$_pkgver
+  cd $srcdir/pacman-contrib-v$_pkgver
 
   make DESTDIR="$pkgdir" install
 
