@@ -7,9 +7,9 @@
 # Dave Reisner <dreisner@archlinux.org>
 
 pkgname=pacman
-pkgver=6.0.0
+pkgver=6.0.1
 _pkgver=1.4.0
-pkgrel=2
+pkgrel=1
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -37,8 +37,6 @@ validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@a
               '5134EF9EAF65F95B6BB1608E50FB9B273A9D0BB5') # Johannes Löthberg <johannes@kyriasis.com>
 
 source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig}
-        pacman-6.0.0-fix-404-download.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/3401f9e142ac4c701cd98c52618cb13164f2146b.patch
-        pacman-6.0.0-fix-key-import-double-free.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/542910d684191eb7f25ddc5d3d8fe3060028a267.patch
         https://gitlab.archlinux.org/pacman/pacman-contrib/-/archive/v$_pkgver/pacman-contrib-v$_pkgver.tar.gz
         0001-pactree-fix-compilation-with-pacman-6.patch
         pacman.conf
@@ -46,10 +44,8 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig
         pacman-sync-first-option.patch
         etc-pacman.d-gnupg.mount
         pacman-init.service)
-sha256sums=('004448085a7747bdc7a0a4dd5d1fb7556c6b890111a06e029ab088f9905d4808'
+sha256sums=('0db61456e56aa49e260e891c0b025be210319e62b15521f29d3e93b00d3bf731'
             'SKIP'
-            'f4c1c39b43b52ba19b656b32913688b81085c73685afe32d2018dbb695d5a1e6'
-            'defdf1686d65fc896c19f41d1bc166912fccf9134b72e50da3b24538366cecdf'
             'c97b2889ab012feaa1882865af9cfeb2406c9045757d2e73b5903277472ce6a2'
             '774d27532a91e2fe490ccc8d21c2d1d4d2a2dbfc8678a8406abb8bb8f9e6626c'
             'a71fabbf3cce40c8df7b2d9897d01c77bcc51c692258224acf492a4440f0feb7'
@@ -60,10 +56,6 @@ sha256sums=('004448085a7747bdc7a0a4dd5d1fb7556c6b890111a06e029ab088f9905d4808'
 
 prepare() {
   cd $pkgname-$pkgver
-  
-  # Arch patches
-  patch -p1 -i "$srcdir"/pacman-6.0.0-fix-404-download.patch
-  patch -p1 -i "$srcdir"/pacman-6.0.0-fix-key-import-double-free.patch
 
   # Manjaro patches
   patch -Np1 < "$srcdir"/pacman-sync-first-option.patch
