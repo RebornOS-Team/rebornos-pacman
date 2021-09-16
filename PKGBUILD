@@ -9,7 +9,7 @@
 pkgname=pacman
 pkgver=6.0.1
 _pkgver=1.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -92,7 +92,7 @@ check() {
   cd "$pkgname-$pkgver"
   meson test -C build
   cd ..
-  
+
   make -C pacman-contrib-v$_pkgver check
 }
 
