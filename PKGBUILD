@@ -1,5 +1,6 @@
 # Maintainer: Philip Müller <philm[at]manjaro[dot]org>
 # Maintainer: Bernhard Landauer <bernhard[at]manjaro[dot]org>
+# Maintainer: Mark Wagie <mark at manjaro dot org>
 # Contributor: Helmut Stult
 
 # Arch credits:
@@ -8,8 +9,8 @@
 
 pkgname=pacman
 pkgver=6.0.1
-_pkgver=1.4.0
-pkgrel=4
+_pkgver=1.5.0
+pkgrel=5
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -35,11 +36,11 @@ install=pacman.install
 options=('strip' 'debug')
 validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@archlinux.org>
               'B8151B117037781095514CA7BBDFFC92306B1121'  # Andrew Gregory (pacman) <andrew@archlinux.org>
-              '5134EF9EAF65F95B6BB1608E50FB9B273A9D0BB5') # Johannes Löthberg <johannes@kyriasis.com>
+              '5134EF9EAF65F95B6BB1608E50FB9B273A9D0BB5' # Johannes Löthberg <johannes@kyriasis.com>
+              '04DC3FB1445FECA813C27EFAEA4F7B321A906AD9') # Daniel M. Capella <polyzen@archlinux.org>
 
 source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig}
         https://gitlab.archlinux.org/pacman/pacman-contrib/-/archive/v$_pkgver/pacman-contrib-v$_pkgver.tar.gz
-        0001-pactree-fix-compilation-with-pacman-6.patch
         'add-flto-to-LDFLAGS-for-clang.patch'
         makepkg-use-ffile-prefix-map-instead-of-fdebug-prefi.patch
         libmakepkg-add-extra-buildflags-only-when-buildflags.patch
@@ -51,8 +52,7 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig
         pacman-init.service)
 sha256sums=('0db61456e56aa49e260e891c0b025be210319e62b15521f29d3e93b00d3bf731'
             'SKIP'
-            'c97b2889ab012feaa1882865af9cfeb2406c9045757d2e73b5903277472ce6a2'
-            '774d27532a91e2fe490ccc8d21c2d1d4d2a2dbfc8678a8406abb8bb8f9e6626c'
+            'c9b521348d04df512b12ccc010d3f64302dc077ad5104485f6e8695f116e828d'
             '82ff91b85f4c6ceba19f9330437e2a22aabc966c2b9e2a20a53857f98a42c223'
             'b940e6c0c05a185dce1dbb9da0dcbebf742fca7a63f3e3308d49205afe5a6582'
             '7d0aee976c9c71fcf7c96ef1d99aa76efe47d8c1f4451842d6d159ec7deb4278'
@@ -74,8 +74,6 @@ prepare() {
   patch -Np1 < "$srcdir"/pacman-sync-first-option.patch
 
   cd $srcdir/pacman-contrib-v$_pkgver
-  patch --forward --strip=1 --input=../0001-pactree-fix-compilation-with-pacman-6.patch
-
   ./autogen.sh
 }
 
