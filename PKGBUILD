@@ -33,7 +33,6 @@ replaces=('pacman-contrib' 'pacman-init')
 backup=(etc/pacman.conf etc/makepkg.conf)
 #options=('strip' 'debug')
 install=pacman.install
-options=('strip' 'debug')
 validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@archlinux.org>
               'B8151B117037781095514CA7BBDFFC92306B1121'  # Andrew Gregory (pacman) <andrew@archlinux.org>
               '5134EF9EAF65F95B6BB1608E50FB9B273A9D0BB5' # Johannes Löthberg <johannes@kyriasis.com>
