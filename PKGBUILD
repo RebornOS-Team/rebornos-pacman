@@ -10,7 +10,7 @@
 pkgname=pacman
 pkgver=6.0.1
 _pkgver=1.5.1
-pkgrel=6
+pkgrel=7
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -41,6 +41,7 @@ validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@a
 
 source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig}
         https://gitlab.archlinux.org/pacman/pacman-contrib/-/archive/v$_pkgver/pacman-contrib-v$_pkgver.tar.gz
+        "fix-wkd-lookup.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/e1246baddd14ec6f4b6270b59bea0e1b639472a7.patch"
         'add-flto-to-LDFLAGS-for-clang.patch'
         makepkg-use-ffile-prefix-map-instead-of-fdebug-prefi.patch
         libmakepkg-add-extra-buildflags-only-when-buildflags.patch
@@ -53,6 +54,7 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig
 sha256sums=('0db61456e56aa49e260e891c0b025be210319e62b15521f29d3e93b00d3bf731'
             'SKIP'
             '59c7581975746cf88d6932921a7ff26282ee789997ab90459fea1d5fb5537cc2'
+            '8ab5b1338874d7d58e11c5d1185ea3454fcc89755f9c18faf87ff348ad1ed16c'
             '82ff91b85f4c6ceba19f9330437e2a22aabc966c2b9e2a20a53857f98a42c223'
             'b940e6c0c05a185dce1dbb9da0dcbebf742fca7a63f3e3308d49205afe5a6582'
             '7d0aee976c9c71fcf7c96ef1d99aa76efe47d8c1f4451842d6d159ec7deb4278'
@@ -69,6 +71,7 @@ prepare() {
   patch -Np1 -i ../makepkg-use-ffile-prefix-map-instead-of-fdebug-prefi.patch
   patch -Np1 -i ../libmakepkg-add-extra-buildflags-only-when-buildflags.patch
   patch -Np1 -i ../make-link-time-optimization-flags-configurable.patch
+  patch -Np1 -i ../fix-wkd-lookup.patch
 
   # Manjaro patches
   patch -Np1 < "$srcdir"/pacman-sync-first-option.patch
