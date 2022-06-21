@@ -10,7 +10,7 @@
 pkgname=pacman
 pkgver=6.0.1
 _pkgver=1.5.3
-pkgrel=9
+pkgrel=10
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -40,8 +40,8 @@ validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@a
 
 source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig}
         https://gitlab.archlinux.org/pacman/pacman-contrib/-/archive/v$_pkgver/pacman-contrib-v$_pkgver.tar.gz
-        "fix-wkd-lookup.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/e1246baddd14ec6f4b6270b59bea0e1b639472a7.patch"
-        'add-flto-to-LDFLAGS-for-clang.patch'
+        fix-wkd-lookup.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/e1246baddd14ec6f4b6270b59bea0e1b639472a7.patch
+        add-flto-to-LDFLAGS-for-clang.patch
         makepkg-use-ffile-prefix-map-instead-of-fdebug-prefi.patch
         libmakepkg-add-extra-buildflags-only-when-buildflags.patch
         make-link-time-optimization-flags-configurable.patch
@@ -66,7 +66,7 @@ sha256sums=('0db61456e56aa49e260e891c0b025be210319e62b15521f29d3e93b00d3bf731'
 
 prepare() {
   cd $pkgname-$pkgver
-  patch -Np1 -i ../'add-flto-to-LDFLAGS-for-clang.patch'
+  patch -Np1 -i ../add-flto-to-LDFLAGS-for-clang.patch
   patch -Np1 -i ../makepkg-use-ffile-prefix-map-instead-of-fdebug-prefi.patch
   patch -Np1 -i ../libmakepkg-add-extra-buildflags-only-when-buildflags.patch
   patch -Np1 -i ../make-link-time-optimization-flags-configurable.patch
