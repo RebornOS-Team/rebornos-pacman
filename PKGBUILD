@@ -9,8 +9,8 @@
 
 pkgname=pacman
 pkgver=6.0.1
-_pkgver=1.5.3
-pkgrel=10
+_pkgver=1.6.0
+pkgrel=11
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -31,7 +31,6 @@ provides=('pacman-contrib' 'pacman-init' 'libalpm.so')
 conflicts=('pacman-contrib' 'pacman-init')
 replaces=('pacman-contrib' 'pacman-init')
 backup=(etc/pacman.conf etc/makepkg.conf)
-#options=('strip' 'debug')
 install=pacman.install
 validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@archlinux.org>
               'B8151B117037781095514CA7BBDFFC92306B1121'  # Andrew Gregory (pacman) <andrew@archlinux.org>
@@ -52,7 +51,7 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig
         pacman-init.service)
 sha256sums=('0db61456e56aa49e260e891c0b025be210319e62b15521f29d3e93b00d3bf731'
             'SKIP'
-            '56c0b1ae41ff8e72ae352739e80df0e9f0403a1c66b52d358c46e04f65a82057'
+            '2de9cf4b1f2c278311f8999eb1c940c7c3bde93557d6aefac9d5944490c027b2'
             '8ab5b1338874d7d58e11c5d1185ea3454fcc89755f9c18faf87ff348ad1ed16c'
             '82ff91b85f4c6ceba19f9330437e2a22aabc966c2b9e2a20a53857f98a42c223'
             'b940e6c0c05a185dce1dbb9da0dcbebf742fca7a63f3e3308d49205afe5a6582'
