@@ -10,27 +10,30 @@
 pkgname=pacman
 pkgver=6.0.1
 _pkgver=1.6.0
-pkgrel=11
+pkgrel=12
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="http://www.archlinux.org/pacman/"
 license=('GPL')
 groups=('base-devel')
-depends=('bash' 'fakeroot' 'glibc' 'libarchive' 'curl' 'perl' 'gpgme' 'archlinux-keyring'
-         'manjaro-keyring' 'pacman-mirrors>=4.1.0')
+depends=('bash' 'glibc' 'libarchive' 'curl' 'gpgme'
+         'gettext' 'gawk' 'coreutils' 'gnupg' 'grep'
+         'fakeroot' 'perl' # pacman-contrib deps
+         'pacman-mirrors>=4.1.0')
+makedepends=('meson' 'asciidoc' 'doxygen')
 checkdepends=('python' 'fakechroot')
-makedepends=('asciidoc' 'pacman>=6.0.0' 'meson' 'doxygen')
-optdepends=('haveged: for pacman-init.service'
-            'perl-locale-gettext: translation support in makepkg-template'
+optdepends=('perl-locale-gettext: translation support in makepkg-template'
             'diffutils: for pacdiff'
             'findutils: for pacdiff --find'
             'mlocate: for pacdiff --locate'
             'sudo: privilege elevation for several scripts'
-            'vim: default merge program for pacdiff')
+            'vim: default merge program for pacdiff'
+            'haveged: for pacman-init.service')
 provides=('pacman-contrib' 'pacman-init' 'libalpm.so')
 conflicts=('pacman-contrib' 'pacman-init')
 replaces=('pacman-contrib' 'pacman-init')
-backup=(etc/pacman.conf etc/makepkg.conf)
+backup=(etc/pacman.conf
+        etc/makepkg.conf)
 install=pacman.install
 validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@archlinux.org>
               'B8151B117037781095514CA7BBDFFC92306B1121'  # Andrew Gregory (pacman) <andrew@archlinux.org>
