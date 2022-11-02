@@ -9,8 +9,8 @@
 
 pkgname=pacman
 pkgver=6.0.2
-_pkgver=1.7.1
-pkgrel=3
+_pkgver=1.8.0
+pkgrel=4
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="https://www.archlinux.org/pacman/"
@@ -53,7 +53,7 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig
         pacman-init.service)
 sha256sums=('7d8e3e8c5121aec0965df71f59bedf46052c6cf14f96365c4411ec3de0a4c1a5'
             'SKIP'
-            '81ad0af095fa2a686975bc11b4eb3b6602da60196e82819fb7a92f6fae5bf16d'
+            '80fb41d0b79845e4707ab59af9f098450b071bb5d9bb4bf7fb7911535a871658'
             '522b789e442b3bb3afa7ea3fa417a99554f36ec00de3986cbe92c80f09a7db99'
             'dab7c70fb9d77d702069bb57f5a12496b463d68ae20460fb0a3ffcb4791321a9'
             '0b56c61eac3d9425d68faa2eccbaefdc5ed422b643974ae829eaca0460043da1'
