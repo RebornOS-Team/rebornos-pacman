@@ -10,7 +10,7 @@
 pkgname=pacman
 pkgver=6.0.2
 _pkgver=1.8.0
-pkgrel=5
+pkgrel=6
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="https://www.archlinux.org/pacman/"
@@ -19,7 +19,7 @@ groups=('base-devel')
 depends=('bash' 'glibc' 'libarchive' 'curl' 'gpgme'
          'gettext' 'gawk' 'coreutils' 'gnupg' 'grep'
          'fakeroot' 'perl' # pacman-contrib deps
-         'pacman-mirrors>=4.1.0')
+         'pacman-mirrors')
 makedepends=('meson' 'asciidoc' 'doxygen')
 checkdepends=('python' 'fakechroot')
 optdepends=('perl-locale-gettext: translation support in makepkg-template'
