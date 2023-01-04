@@ -9,8 +9,8 @@
 
 pkgname=pacman
 pkgver=6.0.2
-_pkgver=1.8.0
-pkgrel=6
+_pkgver=1.8.2
+pkgrel=7
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="https://www.archlinux.org/pacman/"
@@ -37,8 +37,8 @@ backup=(etc/pacman.conf
 install=pacman.install
 validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD' # Allan McRae <allan@archlinux.org>
               'B8151B117037781095514CA7BBDFFC92306B1121' # Andrew Gregory (pacman) <andrew@archlinux.org>
-              '5134EF9EAF65F95B6BB1608E50FB9B273A9D0BB5' # Johannes Löthberg <johannes@kyriasis.com>
               '04DC3FB1445FECA813C27EFAEA4F7B321A906AD9') # Daniel M. Capella <polyzen@archlinux.org>
+#              '5134EF9EAF65F95B6BB1608E50FB9B273A9D0BB5') # Johannes Löthberg <johannes@kyriasis.com>
 
 source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig}
         https://gitlab.archlinux.org/pacman/pacman-contrib/-/archive/v$_pkgver/pacman-contrib-v$_pkgver.tar.gz
@@ -53,7 +53,7 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig
         pacman-init.service)
 sha256sums=('7d8e3e8c5121aec0965df71f59bedf46052c6cf14f96365c4411ec3de0a4c1a5'
             'SKIP'
-            '80fb41d0b79845e4707ab59af9f098450b071bb5d9bb4bf7fb7911535a871658'
+            '4a00142292df4297ce19e58156bffd8235084cdc2dd3db22b58a5577243242c0'
             '522b789e442b3bb3afa7ea3fa417a99554f36ec00de3986cbe92c80f09a7db99'
             'dab7c70fb9d77d702069bb57f5a12496b463d68ae20460fb0a3ffcb4791321a9'
             '0b56c61eac3d9425d68faa2eccbaefdc5ed422b643974ae829eaca0460043da1'
