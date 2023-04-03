@@ -9,8 +9,8 @@
 
 pkgname=pacman
 pkgver=6.0.2
-_pkgver=1.8.2
-pkgrel=9
+_pkgver=1.9.0
+pkgrel=10
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="https://www.archlinux.org/pacman/"
@@ -19,7 +19,7 @@ depends=('bash' 'glibc' 'libarchive' 'curl' 'gpgme'
          'gettext' 'gawk' 'coreutils' 'gnupg' 'grep'
          'fakeroot' 'perl' # pacman-contrib deps
          'pacman-mirrors')
-makedepends=('meson' 'asciidoc' 'doxygen')
+makedepends=('meson' 'asciidoc' 'doxygen' 'git')
 checkdepends=('python' 'fakechroot')
 optdepends=('perl-locale-gettext: translation support in makepkg-template'
             'diffutils: for pacdiff'
@@ -38,9 +38,9 @@ validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD' # Allan McRae <allan@ar
               'B8151B117037781095514CA7BBDFFC92306B1121' # Andrew Gregory (pacman) <andrew@archlinux.org>
               '04DC3FB1445FECA813C27EFAEA4F7B321A906AD9') # Daniel M. Capella <polyzen@archlinux.org>
 #              '5134EF9EAF65F95B6BB1608E50FB9B273A9D0BB5') # Johannes Löthberg <johannes@kyriasis.com>
-
+_contrib_commit=20aad854f50a34b18845e34e69409d8a230c2676  # v1.9.0
 source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig}
-        https://gitlab.archlinux.org/pacman/pacman-contrib/-/archive/v$_pkgver/pacman-contrib-v$_pkgver.tar.gz
+        git+https://gitlab.archlinux.org/pacman/pacman-contrib.git#commit=$_contrib_commit
         pacman-always-create-directories-from-debugedit.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/efd0c24c07b86be014a4edb5a8ece021b87e3900.patch
         pacman-always-create-directories-from-debugedit-fixup.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/86981383a2f4380bda26311831be94cdc743649b.patch
         pacman-fix-unique-source-paths.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/478af273dfe24ded197ec54ae977ddc3719d74a0.patch
@@ -52,7 +52,7 @@ source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig
         pacman-init.service)
 sha256sums=('7d8e3e8c5121aec0965df71f59bedf46052c6cf14f96365c4411ec3de0a4c1a5'
             'SKIP'
-            '4a00142292df4297ce19e58156bffd8235084cdc2dd3db22b58a5577243242c0'
+            'SKIP'
             '522b789e442b3bb3afa7ea3fa417a99554f36ec00de3986cbe92c80f09a7db99'
             'dab7c70fb9d77d702069bb57f5a12496b463d68ae20460fb0a3ffcb4791321a9'
             '0b56c61eac3d9425d68faa2eccbaefdc5ed422b643974ae829eaca0460043da1'
@@ -76,7 +76,7 @@ prepare() {
     patch -Np1 < "../$src"
   done
 
-  cd $srcdir/pacman-contrib-v$_pkgver
+  cd $srcdir/pacman-contrib
   ./autogen.sh
 }
 
@@ -93,7 +93,7 @@ build() {
 
   meson compile -C build
 
-  cd $srcdir/pacman-contrib-v$_pkgver
+  cd $srcdir/pacman-contrib
 
   ./configure \
     --prefix=/usr \
@@ -106,7 +106,7 @@ check() {
   cd "$pkgname-$pkgver"
   meson test -C build
 
-  make -C ../pacman-contrib-v$_pkgver check
+  make -C ../pacman-contrib check
 }
 
 package() {
@@ -124,7 +124,7 @@ package() {
   install -m644 $srcdir/etc-pacman.d-gnupg.mount $pkgdir/usr/lib/systemd/system/etc-pacman.d-gnupg.mount
   install -m644 $srcdir/pacman-init.service $pkgdir/usr/lib/systemd/system/pacman-init.service
 
-  cd $srcdir/pacman-contrib-v$_pkgver
+  cd $srcdir/pacman-contrib
 
   make DESTDIR="$pkgdir" install
 
